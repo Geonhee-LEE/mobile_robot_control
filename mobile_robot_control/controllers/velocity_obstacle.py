@@ -136,5 +136,5 @@ def update_state(x, v):
     return new_state
 
 if __name__ == "__main__":
-    simulate("./velocity_obstacle.avi")
+    simulate("./velocity_obstacle.gif")
 

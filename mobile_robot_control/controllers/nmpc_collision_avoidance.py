@@ -137,5 +137,5 @@ def update_state(x0, u, timestep):
     return new_state
 
 if __name__ == "__main__":
-    simulate("./nmpc_collision_avoidance.avi")
+    simulate("./nmpc_collision_avoidance.gif")
 

@@ -9,3 +9,4 @@ Robot control with Traditional control and Optimal control and Learning-based co
 - [PythonLinearNonlinearControl](https://github.com/Shunichi09/PythonLinearNonlinearControl)
 - [Python-RVO2](https://github.com/sybrenstuvel/Python-RVO2)
 - [gym-collision-avoidance](https://github.com/mit-acl/gym-collision-avoidance)
+- [multi_agent_path_planning](https://github.com/atb033/multi_agent_path_planning)

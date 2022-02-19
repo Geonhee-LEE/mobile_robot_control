@@ -6,7 +6,6 @@ author: Ashwin Bose (atb033@github.com)
 
 from mobile_robot_control.utils.multi_robot_plot import plot_robot_and_obstacles
 from mobile_robot_control.utils.create_obstacles import create_obstacles
-from mobile_robot_control.utils.control import compute_desired_velocity
 import numpy as np
 
 SIM_TIME = 6.
@@ -134,6 +133,16 @@ def update_state(x, v):
     new_state[:2] = x[:2] + v * TIMESTEP
     new_state[-2:] = v
     return new_state
+
+def compute_desired_velocity(current_pos, goal_pos, robot_radius, vmax):
+    disp_vec = (goal_pos - current_pos)[:2]
+    norm = np.linalg.norm(disp_vec)
+    if norm < robot_radius / 5:
+        return np.zeros(2)
+    disp_vec = disp_vec / norm
+    np.shape(disp_vec)
+    desired_vel = vmax * disp_vec
+    return desired_vel
 
 if __name__ == "__main__":
     simulate("./velocity_obstacle.gif")

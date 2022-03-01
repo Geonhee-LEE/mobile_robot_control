@@ -1,0 +1,11 @@
+name: mobile_robot_control
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip
+  - scipy
+  - numpy
+  - pandas
+  - cvxpy
+  - matplotlib

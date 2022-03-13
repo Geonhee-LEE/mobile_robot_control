@@ -70,14 +70,6 @@ def move_to_pose(x_start, y_start, theta_start, x_goal, y_goal, theta_goal):
             pose_control_env.plot_vehicle(x, y, theta, x_traj, y_traj)
 
 
-def transformation_matrix(x, y, theta):
-    return np.array([
-        [np.cos(theta), -np.sin(theta), x],
-        [np.sin(theta), np.cos(theta), y],
-        [0, 0, 1]
-    ])
-
-
 def main():
 
     for i in range(5):

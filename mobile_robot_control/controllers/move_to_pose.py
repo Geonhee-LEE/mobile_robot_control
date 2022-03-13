@@ -8,7 +8,7 @@ Author: Daniel Ingram (daniel-s-ingram)
 P. I. Corke, "Robotics, Vision & Control", Springer 2017, ISBN 978-3-319-54413-7
 
 """
-import mobile_robot_control.envs.simple_2d_env.pose_control_env as pose_control_env
+import mobile_robot_control.envs.pose_control_env as pose_control_env
 import numpy as np
 from random import random
 

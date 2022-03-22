@@ -12,8 +12,6 @@ class PoseGoalEnv(Env):
         self.config = config # from configuration file
 
         #GYM Properties (set in subclasses)
-        self.observation_space = ['x', 'y', 'theta']
-        self.action_space = ['v', 'w']
 
         self.x_traj = []
         self.y_traj = []
@@ -25,12 +23,16 @@ class PoseGoalEnv(Env):
         self.y_goal = 0
         self.theta_goal = 0
         
-        self.dt = 0.01
+        self.dt = config.DT
 
     def reset(self):
         """
         Reset to initial position
         """
+        self.x_traj = []
+        self.y_traj = []
+
+
         self.x_start = 20 * random()
         self.y_start = 20 * random()
         self.theta_start = 2 * np.pi * random() - np.pi
@@ -115,5 +117,5 @@ class PoseGoalEnv(Env):
         plt.xlim(0, 20)
         plt.ylim(0, 20)
 
-        plt.pause(self.dt)
+        plt.pause(0.01)
  

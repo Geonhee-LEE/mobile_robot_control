@@ -11,7 +11,6 @@ class UnicyclePoseGoalConfigModule():
 
     # parameters
     CAR_SIZE = 0.2
-    WHEELE_SIZE = (0.075, 0.015)
 
 
     def __init__(self):

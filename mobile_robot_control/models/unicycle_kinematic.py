@@ -10,6 +10,8 @@ class UnicycleKinematicModel(Model):
         """
         super(UnicycleKinematicModel, self).__init__()
         self.model_type = "UnicycleKinematicModel"
+        self.observation_space = ['x', 'y', 'theta']
+        self.action_space = ['v', 'w']
 
     def predict_next_state(self, curr_x, u, dt):
         """ predict next state

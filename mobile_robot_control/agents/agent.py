@@ -18,7 +18,8 @@ class Agent(object):
         self.goal_theta = None
         self.vx = None
         self.vy = None
-        self.time_step = 0.01
+        self.w = None
+        self.time_step = config.DT
         self.xy_tolerance = 0.1 # whether to reach goal within xy_tolerance
         
     def set_pose(self, px, py, theta):
@@ -105,6 +106,7 @@ class Agent(object):
             self.theta = self.theta % (2 * np.pi)
             self.vx = action[0] * np.cos(self.theta)
             self.vy = action[0] * np.sin(self.theta)
+            self.w = action[1]
 
     def goal_reached(self):
         return norm(np.array(self.get_position()) - np.array(self.get_goal_position())) < self.xy_tolerance

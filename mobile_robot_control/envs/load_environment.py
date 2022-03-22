@@ -1,10 +1,10 @@
 from .pose_goal_env import PoseGoalEnv
 
 
-def load_env(args):
+def load_env(args, config):
 
     if args.env == "PoseGoal":
-        return PoseGoalEnv(args.config)
+        return PoseGoalEnv(config)
     #elif args.env == "PathGoal":
     #    return PathGoalEnv()
     #elif args.env == "TrajectoryGoal":

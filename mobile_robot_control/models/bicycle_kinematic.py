@@ -34,7 +34,6 @@ class BicycleKinematicModel(Model):
                 shape(pop_size, state_size)
         """
         if len(u.shape) == 1:
-            print ("curr_x: ", curr_x)
             Ax = np.array([[curr_x[-1] * np.cos(curr_x[2])],
                         [curr_x[-1] * np.sin(curr_x[2])],
                         [0.], 
@@ -52,7 +51,6 @@ class BicycleKinematicModel(Model):
             # calc dot
             x_dot = np.add(np.matmul(B, u[:, np.newaxis]), Bu) # (4, 1)
             x_dot = np.add(Ax, x_dot) # (4, 1)
-            print (x_dot)
             # next state
             next_x = x_dot.flatten() * dt + curr_x
 

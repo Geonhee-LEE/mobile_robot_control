@@ -48,8 +48,6 @@ class Agent(object):
             self.observation[1] = self.py 
             self.observation[2] = self.theta 
 
-            
-
     def set_position(self, position):
         self.px = position[0]
         self.py = position[1]

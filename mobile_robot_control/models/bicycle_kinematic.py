@@ -2,16 +2,24 @@ import numpy as np
 
 from .model import Model
 
-class UnicycleKinematicModel(Model):
+class BicycleKinematicModel(Model):
     """ unicycle kinematic model
     """
     def __init__(self, config):
         """
         """
-        super(UnicycleKinematicModel, self).__init__()
-        self.model_type = "UnicycleKinematicModel"
-        self.observation_space = ['x', 'y', 'theta']
-        self.action_space = ['v', 'w']
+        super(BicycleKinematicModel, self).__init__()
+
+        # Parameters
+        self.k = 0.1  # look forward gain
+        self.Lfc = 2.0  # [m] look-ahead distance
+        self.Kp = 1.0  # speed proportional gain
+        self.dt = 0.1  # [s] time tick
+        self.WB = 2.9  # [m] wheel base of vehicle
+
+        self.model_type = "BicycleKinematicModel"
+        self.observation_space = ['x', 'y', 'yaw', 'v']
+        self.action_space = ['a', 'delta'] # accelerate, steering angle
 
     def predict_next_state(self, curr_x, u, dt):
         """ predict next state
@@ -26,15 +34,25 @@ class UnicycleKinematicModel(Model):
                 shape(pop_size, state_size)
         """
         if len(u.shape) == 1:
-            B = np.array([[np.cos(curr_x[-1]), 0.],
-                          [np.sin(curr_x[-1]), 0.],
-                          [0., 1.]])
+            print ("curr_x: ", curr_x)
+            Ax = np.array([[curr_x[-1] * np.cos(curr_x[2])],
+                        [curr_x[-1] * np.sin(curr_x[2])],
+                        [0.], 
+                        [0.]])
+
+            B = np.array([[0, 0.],
+                          [0, 0.],
+                          [0., 0.],
+                          [1., 0.]]) 
+
+            Bu = np.array([[0.],
+                            [0.],
+                            [curr_x[-1]/self.WB * np.tan(u[1])], 
+                            [0.]])
             # calc dot
-            # x = x + v * np.cos(theta) * dt
-            # y = y + v * np.sin(theta) * dt 
-            # theta = theta + w * dt
-            x_dot = np.matmul(B, u[:, np.newaxis]) 
-            
+            x_dot = np.add(np.matmul(B, u[:, np.newaxis]), Bu) # (4, 1)
+            x_dot = np.add(Ax, x_dot) # (4, 1)
+            print (x_dot)
             # next state
             next_x = x_dot.flatten() * dt + curr_x
 

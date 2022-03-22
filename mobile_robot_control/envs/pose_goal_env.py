@@ -33,8 +33,6 @@ class PoseGoalEnv(Env):
         self.x_traj = []
         self.y_traj = []
 
-        print(self.episode_num)
-
         if (isinstance(self.config.START_POSES, str)):
             self.x_start, self.y_start, self.theta_start = np.array([20 * random(), 20 * random(), 2 * np.pi * random() - np.pi]) # random            
         elif len(self.config.START_POSES.shape) == 1: # constant goal

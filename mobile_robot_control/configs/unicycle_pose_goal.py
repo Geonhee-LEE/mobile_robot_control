@@ -15,10 +15,12 @@ class UnicyclePoseGoalConfigModule():
     INPUT_UPPER_BOUND = np.array([100, 300])
 
     # Start, goal pose
-    START_POSES =  np.array([[10, 10, 0], [10, 10, 0], [10, 10, 0], [10, 10, 0], [10, 10, 0]], np.float64) # np.array([10, 10, 0.0])
-    #START_POSES = "random"
-    GOAL_POSES = np.array([[15, 10, 0], [10, 15, 0], [5, 10, 0], [10, 5, 0], [10, 10, 3.14]], np.float64)  # np.array([15, 10, 0.0])
-    #GOAL_POSES = "random"
+    #START_POSES =  np.array([[10, 10, 0], [10, 10, 0], [10, 10, 0], [10, 10, 0], [10, 10, 0]], np.float64) # multiple start pose, size should be same with `EPISODE_NUM`
+    #START_POSES =  np.array([10, 10, 0.0]) # single start pose
+    START_POSES = "random"
+    #GOAL_POSES = np.array([[15, 10, 0], [10, 15, 0], [5, 10, 0], [10, 5, 0], [10, 10, 3.14]], np.float64) # multiple goal pose, size should be same with `EPISODE_NUM`
+    #GOAL_POSES = np.array([15, 10, 0.0])  # single goal pose
+    GOAL_POSES = "random"
 
     def __init__(self):
         # opt configs

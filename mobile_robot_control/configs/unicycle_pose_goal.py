@@ -4,14 +4,11 @@ class UnicyclePoseGoalConfigModule():
     # parameters
     EPISODE_NUM = 20
     DT = 0.01
-   
-    # for pose goal
-    START_LIST = np.array([-1.5, -3.14])
-    GOAL_LIST = np.array([-1.5, -3.14])
+    XY_TOLERANCE = 0.01
 
-    # parameters
-    CAR_SIZE = 0.2
-
+    # Input bounds
+    INPUT_LOWER_BOUND = np.array([-1.5, -3.14])
+    INPUT_UPPER_BOUND = np.array([0.1, 3.14])
 
     def __init__(self):
         # opt configs

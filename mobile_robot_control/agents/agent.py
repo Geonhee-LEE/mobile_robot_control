@@ -6,6 +6,7 @@ class Agent(object):
         """
         Base class for agent. Have the physical attributes of an agent.
         """
+        self.config = config
         self.planner = planner
         self.controller = controller
         self.model = model
@@ -20,7 +21,7 @@ class Agent(object):
         self.vy = None
         self.w = None
         self.time_step = config.DT
-        self.xy_tolerance = 0.1 # whether to reach goal within xy_tolerance
+        self.xy_tolerance = config.XY_TOLERANCE # whether to reach goal within xy_tolerance
         
     def set_pose(self, px, py, theta):
         self.px = px
@@ -80,6 +81,7 @@ class Agent(object):
         Compute state using received observation and pass it to policy
 
         """
+        
         if self.model.model_type == "HolonomicModel":
             curr_x =  np.array([self.px, self.py]) 
             u =  np.array([action[0], action[1]]) 
@@ -95,9 +97,15 @@ class Agent(object):
         """
         Perform an action and update the state
         """
+        # clip action
+        action = np.clip(action,
+                    self.config.INPUT_LOWER_BOUND,
+                    self.config.INPUT_UPPER_BOUND)
+
         #self.check_validity(action)
         next_pos = self.predict_model(action, self.time_step)
         self.px, self.py, self.theta = next_pos
+
 
         if self.model.model_type == "HolonomicModel":
             self.vx = action[0]

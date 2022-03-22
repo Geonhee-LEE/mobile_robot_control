@@ -6,7 +6,7 @@ class UnicyclePoseGoalConfigModule():
     STATE_SIZE = 3
     INPUT_SIZE = 2
     
-    EPISODE_NUM = 20
+    EPISODE_NUM = 5
     DT = 0.01
     XY_TOLERANCE = 0.01
 
@@ -15,9 +15,9 @@ class UnicyclePoseGoalConfigModule():
     INPUT_UPPER_BOUND = np.array([100, 300])
 
     # Start, goal pose
-    START_POSES = np.array([10, 10, 0.0]) # random
+    START_POSES =  np.array([[10, 10, 0], [10, 10, 0], [10, 10, 0], [10, 10, 0], [10, 10, 0]], np.float64) # np.array([10, 10, 0.0])
     #START_POSES = "random"
-    GOAL_POSES = np.array([15, 10, 3.14])
+    GOAL_POSES = np.array([[15, 10, 0], [10, 15, 0], [5, 10, 0], [10, 5, 0], [10, 10, 3.14]], np.float64)  # np.array([15, 10, 0.0])
     #GOAL_POSES = "random"
 
     def __init__(self):

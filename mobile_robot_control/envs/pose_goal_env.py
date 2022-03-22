@@ -24,6 +24,7 @@ class PoseGoalEnv(Env):
         self.theta_goal = 0
         
         self.dt = config.DT
+        self.episode_num = 0
 
     def reset(self):
         """
@@ -32,21 +33,29 @@ class PoseGoalEnv(Env):
         self.x_traj = []
         self.y_traj = []
 
+        print(self.episode_num)
+
         if (isinstance(self.config.START_POSES, str)):
             self.x_start, self.y_start, self.theta_start = np.array([20 * random(), 20 * random(), 2 * np.pi * random() - np.pi]) # random            
-        else:
-            self.x_start, self.y_start, self.theta_start = self.config.START_POSES 
+        elif len(self.config.START_POSES.shape) == 1: # constant goal
+            self.x_start, self.y_start, self.theta_start = self.config.START_POSES
+        else: # multiple goals
+            self.x_start, self.y_start, self.theta_start = self.config.START_POSES[self.episode_num, :]
 
         if (isinstance(self.config.GOAL_POSES, str)):
-            self.x_goal, self.y_goal, self.theta_goal = np.array([20 * random(), 20 * random(), 2 * np.pi * random() - np.pi]) # random
-        else:
-            self.x_goal, self.y_goal, self.theta_goal = self.config.GOAL_POSES 
+            self.x_goal, self.y_goal, self.theta_goal = np.array([20 * random(), 20 * random(), 2 * np.pi * random() - np.pi]) # random      
+        elif len(self.config.GOAL_POSES.shape) == 1: # constant goal
+             self.x_goal, self.y_goal, self.theta_goal = self.config.GOAL_POSES 
+        else: # multiple goals
+            self.x_goal, self.y_goal, self.theta_goal = self.config.GOAL_POSES[self.episode_num, :]
 
         self.x_traj.append(self.x_start)
         self.y_traj.append(self.y_start)
 
         self.agent.set_pose(self.x_start, self.y_start, self.theta_start)
         self.agent.set_goal_pose(self.x_goal, self.y_goal, self.theta_goal)
+
+        self.episode_num = self.episode_num + 1
 
         return self.agent.get_pose()
 

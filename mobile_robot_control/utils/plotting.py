@@ -1,36 +1,3 @@
-"""
-
-Move to specified pose
-
-Author: Daniel Ingram (daniel-s-ingram)
-        Atsushi Sakai(@Atsushi_twi)
-
-P. I. Corke, "Robotics, Vision & Control", Springer 2017, ISBN 978-3-319-54413-7
-
-"""
-
-import matplotlib.pyplot as plt
-import numpy as np
-from random import random
-
-show_animation = True
-x_start = 1
-y_start = 0
-x_goal = 0
-y_goal = 0
-theta_start = 0
-theta_goal = 0
-dt = 0.01
-
-def set_init_pose(_x_start, _y_start, _theta_start, _x_goal, _y_goal, _theta_goal):  # pragma: no cover
-    global x_start, y_start, theta_start, x_goal, y_goal, theta_goal
-    print("set_init_pose %d", x_start)
-    x_start = _x_start
-    y_start = _y_start
-    theta_start = _theta_start
-    x_goal = _x_goal
-    y_goal = _y_goal
-    theta_goal = _theta_goal
 
 def plot_vehicle(x, y, theta, x_traj, y_traj):  # pragma: no cover
     global x_start, y_start, theta_start, x_goal, y_goal, theta_goal
@@ -71,4 +38,3 @@ def transformation_matrix(x, y, theta):
         [np.sin(theta), np.cos(theta), y],
         [0, 0, 1]
     ])
-

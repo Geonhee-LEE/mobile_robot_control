@@ -25,11 +25,26 @@ class Agent(object):
         self.time_step = config.DT
         self.xy_tolerance = config.XY_TOLERANCE # whether to reach goal within xy_tolerance
         
+    def set_goal_pose(self, goal_x, goal_y, goal_theta):
+        self.goal_x = goal_x
+        self.goal_y = goal_y
+        self.goal_theta = goal_theta
+
     def set_initial_state(self, observation):
         self.observation = observation
-        self.px = observation[0]
-        self.py = observation[1]
-        self.theta = observation[2]
+
+        if self.model.model_type == "HolonomicModel":
+            self.px = observation[0]    # ['x', 'y']
+            self.py = observation[1]    # ['x', 'y']
+        elif self.model.model_type == "UnicycleKinematicModel":
+            self.px = observation[0]    # ['x', 'y', 'theta']
+            self.py = observation[1]    # ['x', 'y', 'theta']
+            self.theta = observation[2] # ['x', 'y', 'theta']
+        elif self.model.model_type == "BicycleKinematicModel":
+            self.px = observation[0]    # ['x', 'y', 'theta']
+            self.py = observation[1]    # ['x', 'y', 'theta']
+            self.theta = observation[2] # ['x', 'y', 'theta']
+            self.vx = observation[3]    # ['x', 'y', 'yaw', 'v']
 
     def set_pose(self, px, py, theta):
         self.px = px
@@ -51,11 +66,16 @@ class Agent(object):
     def set_position(self, position):
         self.px = position[0]
         self.py = position[1]
-
-    def set_goal_pose(self, goal_x, goal_y, goal_theta):
-        self.goal_x = goal_x
-        self.goal_y = goal_y
-        self.goal_theta = goal_theta
+        
+        if self.model.model_type == "HolonomicModel":
+            self.observation[0] = self.px # ['x', 'y']
+            self.observation[1] = self.py # ['x', 'y']
+        elif self.model.model_type == "UnicycleKinematicModel":
+            self.observation[0] = self.px # ['x', 'y', 'theta']
+            self.observation[1] = self.py # ['x', 'y', 'theta']
+        elif self.model.model_type == "BicycleKinematicModel":
+            self.observation[0] = self.px # ['x', 'y', 'yaw', 'v']
+            self.observation[1] = self.py # ['x', 'y', 'yaw', 'v']
 
     def set_velocity(self, velocity):
         self.vx = velocity[0]

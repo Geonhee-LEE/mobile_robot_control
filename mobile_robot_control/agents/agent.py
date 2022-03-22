@@ -101,6 +101,7 @@ class Agent(object):
         action = np.clip(action,
                     self.config.INPUT_LOWER_BOUND,
                     self.config.INPUT_UPPER_BOUND)
+        
 
         #self.check_validity(action)
         next_pos = self.predict_model(action, self.time_step)

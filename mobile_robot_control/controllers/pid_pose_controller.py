@@ -2,11 +2,11 @@
 import numpy as np
 from random import random
 
-class PID(object):
+class PIDPoseControl(object):
     def __init__(self, config):
-        self.Kp_rho = 9
-        self.Kp_alpha = 15
-        self.Kp_beta = -3
+        self.Kp_rho = config.opt_config["PIDPoseControl"]["Kp_rho"]
+        self.Kp_alpha = config.opt_config["PIDPoseControl"]["Kp_alpha"]
+        self.Kp_beta = config.opt_config["PIDPoseControl"]["Kp_beta"]
 
         # save
         self.history_u = []
@@ -37,6 +37,7 @@ class PID(object):
         if alpha > np.pi / 2 or alpha < -np.pi / 2:
             v = -v
 
+        self.history_u.append(np.array([v, w]))
         return np.array([v, w])
 
     def __str__(self):

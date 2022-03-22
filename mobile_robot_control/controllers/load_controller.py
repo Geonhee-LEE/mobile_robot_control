@@ -1,8 +1,8 @@
-from .pid import PID
+from .pid_pose_controller import PIDPoseControl
 def load_controller(args, config, model):
 
-    if args.controller_type == "PID":
-        return PID(config)
+    if args.controller_type == "PIDPoseControl":
+        return PIDPoseControl(config)
     #elif args.controller_type == "CEM":
     #    return CEM(config, model)
 

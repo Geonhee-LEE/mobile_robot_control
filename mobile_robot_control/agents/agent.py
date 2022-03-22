@@ -11,6 +11,8 @@ class Agent(object):
         self.controller = controller
         self.model = model
 
+        self.observation = np.ndarray(shape=(config.STATE_SIZE,), dtype = float)
+        
         self.px = None
         self.py = None
         self.theta = None
@@ -23,10 +25,30 @@ class Agent(object):
         self.time_step = config.DT
         self.xy_tolerance = config.XY_TOLERANCE # whether to reach goal within xy_tolerance
         
+    def set_initial_state(self, observation):
+        self.observation = observation
+        self.px = observation[0]
+        self.py = observation[1]
+        self.theta = observation[2]
+
     def set_pose(self, px, py, theta):
         self.px = px
         self.py = py
         self.theta = theta
+        
+        if self.model.model_type == "HolonomicModel": #np.array([self.px, self.py]) 
+            self.observation[0] = self.px 
+            self.observation[1] = self.py
+        elif self.model.model_type == "UnicycleKinematicModel": # np.array([self.px, self.py, self.theta]) #['x', 'y', 'theta']
+            self.observation[0] = self.px 
+            self.observation[1] = self.py
+            self.observation[2] = self.theta
+        elif self.model.model_type == "BicycleKinematicModel": #np.array([self.px, self.py, self.theta, self.vx])  # ['x', 'y', 'yaw', 'v']
+            self.observation[0] = self.px 
+            self.observation[1] = self.py 
+            self.observation[2] = self.theta 
+
+            
 
     def set_position(self, position):
         self.px = position[0]
@@ -40,6 +62,9 @@ class Agent(object):
     def set_velocity(self, velocity):
         self.vx = velocity[0]
         self.vy = velocity[1]
+        
+        if self.model.model_type == "BicycleKinematicModel":
+            self.observation[3] = self.vx #np.array([self.px, self.py, self.theta, self.vx])  # ['x', 'y', 'yaw', 'v']
 
     def get_pose(self):
         return self.px, self.py, self.theta
@@ -56,6 +81,10 @@ class Agent(object):
     def get_velocity(self):
         return self.vx, self.vy
 
+    def get_obs(self):
+        return self.observation 
+
+    # plan and control or optimize
     def compute_action(self, observation):
         """
         Compute state using received observation and pass it to policy
@@ -69,7 +98,7 @@ class Agent(object):
         if self.planner is not None:
             g_xs = self.planner.plan(observation, self.get_goal_pose())
         else:
-            g_xs = self.get_goal_pose()
+            g_xs = self.get_goal_pose() # Pose control
 
         # obtain sol
         action = self.controller.calculate_command(observation, g_xs)
@@ -83,15 +112,22 @@ class Agent(object):
         """
         
         if self.model.model_type == "HolonomicModel":
-            curr_x =  np.array([self.px, self.py]) 
+            curr_x =  self.observation #np.array([self.px, self.py]) 
             u =  np.array([action[0], action[1]]) 
-            next_x = self.model.predict_next_state(curr_x, u, time_step)
+            self.observation = self.model.predict_next_state(curr_x, u, time_step)
+            self.px, self.py = self.observation[0:2]
         elif self.model.model_type == "UnicycleKinematicModel":
-            curr_x =  np.array([self.px, self.py, self.theta]) 
-            u =  np.array([action[0], action[1]]) 
-            next_x = self.model.predict_next_state(curr_x, u, time_step)
+            curr_x =  self.observation # np.array([self.px, self.py, self.theta]) #['x', 'y', 'theta']
+            u =  np.array([action[0], action[1]]) # ['v', 'w']
+            self.observation = self.model.predict_next_state(curr_x, u, time_step)
+            self.px, self.py, self.theta = self.observation[0:3]
+        elif self.model.model_type == "BicycleKinematicModel":
+            curr_x =  self.observation #np.array([self.px, self.py, self.theta, self.vx])  # ['x', 'y', 'yaw', 'v']
+            u =  np.array([action[0], action[1]]) # ['a', 'delta']
+            self.observation = self.model.predict_next_state(curr_x, u, time_step)
+            self.px, self.py, self.theta = self.observation[0:3]
 
-        return next_x
+        return self.observation
 
     def step(self, action):
         """
@@ -102,20 +138,9 @@ class Agent(object):
                     self.config.INPUT_LOWER_BOUND,
                     self.config.INPUT_UPPER_BOUND)
         
-
         #self.check_validity(action)
-        next_pos = self.predict_model(action, self.time_step)
-        self.px, self.py, self.theta = next_pos
-
-
-        if self.model.model_type == "HolonomicModel":
-            self.vx = action[0]
-            self.vy = action[1]
-        elif self.model.model_type == "UnicycleKinematicModel":
-            self.theta = self.theta % (2 * np.pi)
-            self.vx = action[0] * np.cos(self.theta)
-            self.vy = action[0] * np.sin(self.theta)
-            self.w = action[1]
+        self.predict_model(action, self.time_step)
+        
 
     def goal_reached(self):
         return norm(np.array(self.get_position()) - np.array(self.get_goal_position())) < self.xy_tolerance

@@ -20,7 +20,9 @@ class PIDPoseControl(object):
         Returns:
             opt_input (numpy.ndarray): optimal input, shape(input_size, )
         """
-        x, y, theta = curr_x
+        x = curr_x[0]
+        y = curr_x[1]
+        theta = curr_x[2]
         x_goal, y_goal, theta_goal = g_xs
         
         x_diff = x_goal - x

@@ -1,7 +1,7 @@
 from .pid_pose_controller import PIDPoseControl
 def load_controller(args, config, model):
 
-    if args.controller_type == "PIDPoseControl":
+    if args.controller_type == "PID":
         return PIDPoseControl(config)
     #elif args.controller_type == "CEM":
     #    return CEM(config, model)

@@ -4,9 +4,9 @@ import numpy as np
 from mobile_robot_control.utils.transformation import transformation_matrix
 from random import random
 
-class PoseGoalEnv(Env):
+class PathGoalEnv(Env):
     """
-    Implements a Gym Environment for controller from initial pose to goal pose  
+    Implements a Gym Environment for controller for path  
     """
     def __init__(self, config):
         self.config = config # from configuration file
@@ -32,7 +32,6 @@ class PoseGoalEnv(Env):
         """
         self.x_traj = []
         self.y_traj = []
-        self.agent.set_initial_state(self.config.INITIAL_STATE)
 
         if (isinstance(self.config.START_POSES, str)):
             self.x_start, self.y_start, self.theta_start = np.array([20 * random(), 20 * random(), 2 * np.pi * random() - np.pi]) # random            
@@ -50,15 +49,15 @@ class PoseGoalEnv(Env):
 
         self.x_traj.append(self.x_start)
         self.y_traj.append(self.y_start)
-        
+
         self.agent.set_pose(self.x_start, self.y_start, self.theta_start)
         self.agent.set_goal_pose(self.x_goal, self.y_goal, self.theta_goal)
 
-        self.agent.set_velocity(np.array([0, 0])) ##### need to set initial velocity 
+        self.agent.set_velocity(np.array([1,1])) ##### need to set
 
         self.episode_num = self.episode_num + 1
 
-        return self.agent.get_obs()
+        return self.agent.get_pose()
 
     def set_agent(self, agent):
         self.agent = agent
@@ -70,7 +69,7 @@ class PoseGoalEnv(Env):
         return 0
 
     def get_obs(self):        
-        return self.agent.get_obs()
+        return self.agent.get_pose()
 
     def step(self, action):
         """

@@ -1,9 +1,9 @@
 import numpy as np
 from random import random
 
-class UnicyclePoseGoalConfigModule():
+class BicyclePoseGoalConfigModule():
     # parameters
-    STATE_SIZE = 3
+    STATE_SIZE = 4
     INPUT_SIZE = 2
     
     EPISODE_NUM = 5
@@ -11,8 +11,8 @@ class UnicyclePoseGoalConfigModule():
     XY_TOLERANCE = 0.01
 
     # Input bounds
-    INPUT_LOWER_BOUND = np.array([-100, -300])
-    INPUT_UPPER_BOUND = np.array([100, 300])
+    INPUT_LOWER_BOUND = np.array([-1, -1.57])
+    INPUT_UPPER_BOUND = np.array([1, 1.57])
 
     # Start, goal pose
     #START_POSES =  np.array([[10, 10, 0], [10, 10, 0], [10, 10, 0], [10, 10, 0], [10, 10, 0]], np.float64) # multiple start pose, size should be same with `EPISODE_NUM`
@@ -22,6 +22,8 @@ class UnicyclePoseGoalConfigModule():
     #GOAL_POSES = np.array([15, 10, 0.0])  # single goal pose
     GOAL_POSES = "random"
 
+    INITIAL_STATE = np.ndarray(shape=(STATE_SIZE,), dtype = float)
+    
     def __init__(self):
         # opt configs
         self.opt_config = {

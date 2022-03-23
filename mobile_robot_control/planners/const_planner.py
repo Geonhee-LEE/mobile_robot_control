@@ -1,14 +1,15 @@
 import numpy as np
+from .planner import Planner
 
-class Planner():
+class ConstantPlanner(Planner):
+    """ This planner make constant goal state
     """
-    """
-    def __init__(self):
+    def __init__(self, config):
         """
         """
-        pass
+        super(ConstantPlanner, self).__init__()
 
-    def global_plan(self, start, goal):
+    def global_plan(self, start, goal): 
         """
         global plan from initial state to goal state. It can be called when env's `reset()`
 
@@ -18,11 +19,13 @@ class Planner():
         Returns:
             plan (numpy.ndarrya): global plan's poses, shape(pred_len, state_size)
         """
-        raise NotImplementedError("Implement plan func")
+
+        return goal
+
 
     def local_plan(self, curr_x, plan):
         """
-        local plan from current state to goal state by pruning. It can be called when agent's `compute_action()`
+        local plan from current state to goal state. It can be called when agent's `compute_action()`
 
         Args:
             curr_x (numpy.ndarray): current state, shape(state_size)
@@ -30,4 +33,5 @@ class Planner():
         Returns:
             g_xs (numpy.ndarrya): prune plan's poses, shape(prune_path_len, state_size)
         """
-        raise NotImplementedError("Implement plan func")
+
+        return plan

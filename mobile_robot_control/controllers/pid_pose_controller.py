@@ -11,7 +11,7 @@ class PIDPoseControl(object):
         # save
         self.history_u = []
 
-    def calculate_command(self, curr_x, g_xs):
+    def solve(self, curr_x, g_xs):
         """ calculate the optimal inputs
 
         Args:

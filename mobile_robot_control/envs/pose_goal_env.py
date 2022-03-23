@@ -32,7 +32,6 @@ class PoseGoalEnv(Env):
         """
         self.x_traj = []
         self.y_traj = []
-        self.agent.set_initial_state(self.config.INITIAL_STATE)
 
         if (isinstance(self.config.START_POSES, str)):
             self.x_start, self.y_start, self.theta_start = np.array([20 * random(), 20 * random(), 2 * np.pi * random() - np.pi]) # random            
@@ -51,10 +50,7 @@ class PoseGoalEnv(Env):
         self.x_traj.append(self.x_start)
         self.y_traj.append(self.y_start)
         
-        self.agent.set_pose(self.x_start, self.y_start, self.theta_start)
-        self.agent.set_goal_pose(self.x_goal, self.y_goal, self.theta_goal)
-
-        self.agent.set_velocity(np.array([0, 0])) ##### need to set initial velocity 
+        self.agent.set(self.x_start, self.y_start, self.theta_start, self.x_goal, self.y_goal, self.theta_goal, 0, 0)
 
         self.episode_num = self.episode_num + 1
 

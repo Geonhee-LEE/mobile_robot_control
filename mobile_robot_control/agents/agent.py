@@ -22,29 +22,34 @@ class Agent(object):
         self.vx = None
         self.vy = None
         self.w = None
+        self.global_path = None
         self.time_step = config.DT
         self.xy_tolerance = config.XY_TOLERANCE # whether to reach goal within xy_tolerance
-        
+    
+    def set(self, x_start, y_start, theta_start, x_goal, y_goal, theta_goal, initial_vx, initial_vy):
+        self.set_pose(x_start, y_start, theta_start)
+        self.set_goal_pose(x_goal, y_goal, theta_goal)
+        self.set_velocity(np.array([initial_vx, initial_vy]))
+
+        if self.model.model_type == "HolonomicModel":
+            self.observation[0] = x_start # ['x', 'y']
+            self.observation[1] = y_start # ['x', 'y']
+        elif self.model.model_type == "UnicycleKinematicModel":
+            self.observation[0] = x_start # ['x', 'y', 'theta']
+            self.observation[1] = y_start # ['x', 'y', 'theta']
+            self.observation[2] = theta_start # ['x', 'y', 'theta']
+        elif self.model.model_type == "BicycleKinematicModel":
+            self.observation[0] = x_start # ['x', 'y', 'yaw', 'v']
+            self.observation[1] = y_start # ['x', 'y', 'yaw', 'v']
+            self.observation[2] = theta_start # ['x', 'y', 'yaw', 'v']
+            self.observation[3] = initial_vx # ['x', 'y', 'yaw', 'v']
+
+        self.global_path = self.planner.global_plan(self.observation, self.get_goal_pose())
+
     def set_goal_pose(self, goal_x, goal_y, goal_theta):
         self.goal_x = goal_x
         self.goal_y = goal_y
         self.goal_theta = goal_theta
-
-    def set_initial_state(self, observation):
-        self.observation = observation
-
-        if self.model.model_type == "HolonomicModel":
-            self.px = observation[0]    # ['x', 'y']
-            self.py = observation[1]    # ['x', 'y']
-        elif self.model.model_type == "UnicycleKinematicModel":
-            self.px = observation[0]    # ['x', 'y', 'theta']
-            self.py = observation[1]    # ['x', 'y', 'theta']
-            self.theta = observation[2] # ['x', 'y', 'theta']
-        elif self.model.model_type == "BicycleKinematicModel":
-            self.px = observation[0]    # ['x', 'y', 'theta']
-            self.py = observation[1]    # ['x', 'y', 'theta']
-            self.theta = observation[2] # ['x', 'y', 'theta']
-            self.vx = observation[3]    # ['x', 'y', 'yaw', 'v']
 
     def set_pose(self, px, py, theta):
         self.px = px
@@ -108,22 +113,20 @@ class Agent(object):
         Compute state using received observation and pass it to policy
 
         """
+        if self.planner is None:
+            raise AttributeError('planner attribute has to be set!')
         if self.controller is None:
             raise AttributeError('controller attribute has to be set!')
 
         # plan
-        g_xs = []
-        if self.planner is not None:
-            g_xs = self.planner.plan(observation, self.get_goal_pose())
-        else:
-            g_xs = self.get_goal_pose() # Pose control
+        g_xs = self.planner.local_plan(observation, self.global_path)
 
         # obtain sol
-        action = self.controller.calculate_command(observation, g_xs)
+        action = self.controller.solve(observation, g_xs)
 
         return action
 
-    def predict_model(self, action, time_step):
+    def update(self, action, time_step):
         """
         Compute state using received observation and pass it to policy
 
@@ -145,7 +148,7 @@ class Agent(object):
             self.observation = self.model.predict_next_state(curr_x, u, time_step)
             self.px, self.py, self.theta = self.observation[0:3]
 
-        return self.observation
+        #return self.observation
 
     def step(self, action):
         """
@@ -157,7 +160,7 @@ class Agent(object):
                     self.config.INPUT_UPPER_BOUND)
         
         #self.check_validity(action)
-        self.predict_model(action, self.time_step)
+        self.update(action, self.time_step)
         
 
     def goal_reached(self):

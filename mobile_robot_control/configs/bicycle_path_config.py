@@ -1,7 +1,7 @@
 import numpy as np
 from random import random
 
-class BicyclePoseGoalConfigModule():
+class BicyclePathGoalConfigModule():
     # parameters
     STATE_SIZE = 4
     INPUT_SIZE = 2
@@ -29,7 +29,17 @@ class BicyclePoseGoalConfigModule():
     def __init__(self):
         # opt configs
         self.opt_config = {
-            "PIDPoseControl": {
+            "PurePursuit": {
+                "Kp_rho": 9,
+                "Kp_alpha": 15,
+                "Kp_beta": -3
+            },
+            "Stanley": {
+                "Kp_rho": 9,
+                "Kp_alpha": 15,
+                "Kp_beta": -3
+            },
+            "LQR": {
                 "Kp_rho": 9,
                 "Kp_alpha": 15,
                 "Kp_beta": -3

@@ -7,7 +7,7 @@ setup(
     author="Geonhee Lee",
     author_email="gunhee6392@gmail.com",
     url='https://github.com/Geonhee-LEE/mobile_robot_control.git',
-    packages=["mobile_robot_control", "mobile_robot_control.envs.simple_2d_env"],
+    packages=["mobile_robot_control", "mobile_robot_control.envs"],
     provides=["mobile_robot_control"],
     install_requires=["matplotlib"],
     license="GNU Lesser General Public License v3",

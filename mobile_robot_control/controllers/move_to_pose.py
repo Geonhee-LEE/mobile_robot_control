@@ -8,7 +8,7 @@ Author: Daniel Ingram (daniel-s-ingram)
 P. I. Corke, "Robotics, Vision & Control", Springer 2017, ISBN 978-3-319-54413-7
 
 """
-import mobile_robot_control.envs.simple_2d_env.pose_control_env as pose_control_env
+import mobile_robot_control.envs.pose_control_env as pose_control_env
 import numpy as np
 from random import random
 
@@ -68,14 +68,6 @@ def move_to_pose(x_start, y_start, theta_start, x_goal, y_goal, theta_goal):
 
         if show_animation:  # pragma: no cover
             pose_control_env.plot_vehicle(x, y, theta, x_traj, y_traj)
-
-
-def transformation_matrix(x, y, theta):
-    return np.array([
-        [np.cos(theta), -np.sin(theta), x],
-        [np.sin(theta), np.cos(theta), y],
-        [0, 0, 1]
-    ])
 
 
 def main():

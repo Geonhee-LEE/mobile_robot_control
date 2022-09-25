@@ -4,8 +4,8 @@
 
 - Robot control with Traditional control and Optimal control and Learning-based control such as Reinforcement Learning.
 
+## collision avoidance: 
 
-collision avoidance: 
 ![nmpc_collision_avoidance](https://user-images.githubusercontent.com/12562147/192134300-20660d9b-79ba-45eb-8b7f-caf10cdf1160.gif)
 
 # References

@@ -2,11 +2,28 @@
 
 # Mobile Robot Control
 
+- Model: Differential Drive
 - Robot control with Traditional control and Optimal control and Learning-based control such as Reinforcement Learning.
+
+
+## Path Tracking: 
+
+- PID Control:
+     
+     https://user-images.githubusercontent.com/12562147/194739767-6a22dc5d-88e0-42c3-8e60-88a77b9dd1dd.mp4
+
+
+- Pure Pursuit:
+
 
 ## collision avoidance: 
 
-![nmpc_collision_avoidance](https://user-images.githubusercontent.com/12562147/192134300-20660d9b-79ba-45eb-8b7f-caf10cdf1160.gif)
+
+
+
+- Nonlinear Model Predictive Control:
+    
+    ![nmpc_collision_avoidance](https://user-images.githubusercontent.com/12562147/192134300-20660d9b-79ba-45eb-8b7f-caf10cdf1160.gif)
 
 # References
 - [PythonRobotics](https://github.com/AtsushiSakai/PythonRobotics)
